@@ -280,7 +280,7 @@ def render_terminal(s):
 
     lines = [  # (kind, text, start_time)
         ("cmd", "whoami", 0.4),
-        ("out", f"{NAME} · software developer · I build agents that ship code", 1.3),
+        ("out", f"{NAME} · software developer · I build professional products", 1.3),
         ("cmd", "./this_week --summary", 2.0),
         ("out", week, 3.5),
         ("out", latest, 3.8),
