@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="110" viewBox="0 0 900 110" role="img" aria-label="Commit streak: 12 days in a row, longest streak 24 days.">
+<style>.t{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif}.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace}.sq{opacity:0;animation:in .4s ease-out forwards}@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}.today{animation:pulse 2.4s ease-in-out infinite}@keyframes pulse{0%,100%{stroke-opacity:.5}50%{stroke-opacity:1}}@media (prefers-reduced-motion:reduce){.sq{animation:none;opacity:1}.today{animation:none;stroke-opacity:1}}</style>
+<rect x=".5" y=".5" width="899" height="109" rx="14" fill="#0b1020" stroke="#1e293b"/>
+<text class="t" x="32" y="36" fill="#e2e8f0" font-size="16" font-weight="600">Commit streak · 12 days</text>
+<text class="m" x="868" y="36" fill="#64748b" font-size="12" text-anchor="end">longest · 24 days</text>
+<rect class="sq" style="animation-delay:0.000s" x="32.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.020s" x="60.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.040s" x="88.0" y="58" width="24.0" height="22" rx="4" fill="#0f172a" fill-opacity="1" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.060s" x="116.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.080s" x="144.0" y="58" width="24.0" height="22" rx="4" fill="#0f172a" fill-opacity="1" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.100s" x="172.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.120s" x="200.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.140s" x="228.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.160s" x="256.0" y="58" width="24.0" height="22" rx="4" fill="#0f172a" fill-opacity="1" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.180s" x="284.0" y="58" width="24.0" height="22" rx="4" fill="#0f172a" fill-opacity="1" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.200s" x="312.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.220s" x="340.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.240s" x="368.0" y="58" width="24.0" height="22" rx="4" fill="#0f172a" fill-opacity="1" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.260s" x="396.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.280s" x="424.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.300s" x="452.0" y="58" width="24.0" height="22" rx="4" fill="#0f172a" fill-opacity="1" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.320s" x="480.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity=".35" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.340s" x="508.0" y="58" width="24.0" height="22" rx="4" fill="#0f172a" fill-opacity="1" stroke="#334155"/>
+<rect class="sq" style="animation-delay:0.360s" x="536.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.380s" x="564.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.400s" x="592.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.420s" x="620.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.440s" x="648.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.460s" x="676.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.480s" x="704.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.500s" x="732.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.520s" x="760.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.540s" x="788.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq" style="animation-delay:0.560s" x="816.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<rect class="sq today" style="animation-delay:0.580s" x="844.0" y="58" width="24.0" height="22" rx="4" fill="#34d399" fill-opacity="1" stroke="#5eead4"/>
+<text class="m" x="32" y="98" fill="#334155" font-size="10">30 days ago</text>
+<text class="m" x="868" y="98" fill="#334155" font-size="10" text-anchor="end">today</text>
+</svg>

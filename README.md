@@ -2,6 +2,8 @@
 
 <img src="./assets/terminal.svg" alt="Dustin Aldana, software developer. A terminal showing this week's GitHub activity." width="100%">
 
+<img src="./assets/streak.svg" alt="Commit streak: current streak and longest streak, shown as a 30-day activity strip." width="100%">
+
 </div>
 
 ### What I build
