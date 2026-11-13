@@ -216,15 +216,18 @@ def render_stack():
 # 3. Terminal card (refreshed daily by the Action)
 # --------------------------------------------------------------------------
 QUERY = """
-query($login:String!, $from:DateTime!, $to:DateTime!) {
+query($login:String!, $weekFrom:DateTime!, $yearFrom:DateTime!, $to:DateTime!) {
   user(login:$login) {
-    contributionsCollection(from:$from, to:$to) {
+    week: contributionsCollection(from:$weekFrom, to:$to) {
       totalCommitContributions
       totalPullRequestContributions
       commitContributionsByRepository(maxRepositories:25) {
         repository { name primaryLanguage { name } }
         contributions { totalCount }
       }
+    }
+    year: contributionsCollection(from:$yearFrom, to:$to) {
+      contributionCalendar { weeks { contributionDays { date contributionCount } } }
     }
     repositories(first:5, orderBy:{field:PUSHED_AT, direction:DESC}, ownerAffiliations:OWNER, privacy:PUBLIC) {
       nodes { name description }
@@ -233,13 +236,34 @@ query($login:String!, $from:DateTime!, $to:DateTime!) {
 }"""
 
 
+def compute_streak(counts):
+    """Current and longest run of days with count > 0. `counts` is oldest -> newest."""
+    i = len(counts) - 1
+    if i >= 0 and counts[i] == 0:
+        i -= 1  # today isn't over yet; a quiet "today" shouldn't kill an active streak
+    current = 0
+    while i >= 0 and counts[i] > 0:
+        current += 1
+        i -= 1
+    longest = run = 0
+    for c in counts:
+        run = run + 1 if c > 0 else 0
+        longest = max(longest, run)
+    return current, max(longest, current)
+
+
 def fetch_stats():
     token = os.environ.get("GITHUB_TOKEN")
     if not token:
         return None
     now = datetime.now(timezone.utc)
-    body = json.dumps({"query": QUERY, "variables": {
-        "login": USER, "from": (now - timedelta(days=7)).isoformat(), "to": now.isoformat()}}).encode()
+    variables = {
+        "login": USER,
+        "weekFrom": (now - timedelta(days=7)).isoformat(),
+        "yearFrom": (now - timedelta(days=364)).isoformat(),
+        "to": now.isoformat(),
+    }
+    body = json.dumps({"query": QUERY, "variables": variables}).encode()
     req = urllib.request.Request("https://api.github.com/graphql", data=body, headers={
         "Authorization": f"bearer {token}", "Content-Type": "application/json", "User-Agent": USER})
     with urllib.request.urlopen(req, timeout=30) as r:
@@ -247,13 +271,18 @@ def fetch_stats():
     if "errors" in data:
         raise RuntimeError(data["errors"])
     u = data["data"]["user"]
-    cc = u["contributionsCollection"]
+    cc = u["week"]
     langs = {}
     for item in cc["commitContributionsByRepository"]:
         lang = (item["repository"]["primaryLanguage"] or {}).get("name")
         if lang:
             langs[lang] = langs.get(lang, 0) + item["contributions"]["totalCount"]
     repos = [n["name"] for n in u["repositories"]["nodes"] if n["name"].lower() != USER.lower()]
+
+    day_counts = [d["contributionCount"] for week in u["year"]["contributionCalendar"]["weeks"]
+                  for d in week["contributionDays"]]
+    streak, longest = compute_streak(day_counts)
+
     return {
         "commits": cc["totalCommitContributions"],
         "prs": cc["totalPullRequestContributions"],
@@ -261,11 +290,17 @@ def fetch_stats():
         "lang": max(langs, key=langs.get) if langs else None,
         "latest": repos[0] if repos else None,
         "date": now.strftime("%b %d, %Y"),
+        "streak": streak,
+        "longest": longest,
+        "last30": [c > 0 for c in day_counts[-30:]],
     }
 
 
 SAMPLE = {"commits": 23, "prs": 3, "repos": 4, "lang": "TypeScript", "latest": "agent-pipeline",
-          "date": datetime.now(timezone.utc).strftime("%b %d, %Y")}
+          "date": datetime.now(timezone.utc).strftime("%b %d, %Y"),
+          "streak": 12, "longest": 24,
+          "last30": [True, True, False, True, False, True, True, True, False, False,
+                     True, True, False, True, True, False, True, False] + [True] * 12}
 
 
 def render_terminal(s):
@@ -329,6 +364,51 @@ def render_terminal(s):
     return "\n".join(out)
 
 
+# --------------------------------------------------------------------------
+# 4. Streak card (refreshed daily by the Action)
+# --------------------------------------------------------------------------
+def render_streak(s):
+    W, H = 900, 110
+    streak, longest, last30 = s["streak"], s["longest"], s["last30"]
+    n = len(last30)
+    x0, x1, sq_y, sq_h, gap = 32, W - 32, 58, 22, 4
+    sq_w = (x1 - x0 - gap * (n - 1)) / n
+
+    css = [f".t{{font-family:{SANS}}}.m{{font-family:{MONO}}}",
+           ".sq{opacity:0;animation:in .4s ease-out forwards}",
+           "@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}",
+           ".today{animation:pulse 2.4s ease-in-out infinite}",
+           "@keyframes pulse{0%,100%{stroke-opacity:.5}50%{stroke-opacity:1}}",
+           "@media (prefers-reduced-motion:reduce){.sq{animation:none;opacity:1}.today{animation:none;"
+           "stroke-opacity:1}}"]
+
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" '
+           f'aria-label="Commit streak: {streak} day{"s" if streak != 1 else ""} in a row, '
+           f'longest streak {longest} day{"s" if longest != 1 else ""}.">',
+           f"<style>{''.join(css)}</style>",
+           f'<rect x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="14" fill="{BG}" stroke="{PANEL_STROKE}"/>',
+           f'<text class="t" x="32" y="36" fill="{INK}" font-size="16" font-weight="600">'
+           f'Commit streak · {streak} day{"s" if streak != 1 else ""}</text>',
+           f'<text class="m" x="{W - 32}" y="36" fill="{MUTED}" font-size="12" text-anchor="end">'
+           f'longest · {longest} day{"s" if longest != 1 else ""}</text>']
+
+    for i, lit in enumerate(last30):
+        cx = x0 + i * (sq_w + gap)
+        in_streak = lit and (n - i) <= streak
+        fill, opacity = ("#34d399", "1" if in_streak else ".35") if lit else ("#0f172a", "1")
+        stroke = "#5eead4" if in_streak else DIM
+        cls = "sq today" if i == n - 1 else "sq"
+        out.append(f'<rect class="{cls}" style="animation-delay:{i * .02:.3f}s" x="{cx:.1f}" y="{sq_y}" '
+                   f'width="{sq_w:.1f}" height="{sq_h}" rx="4" fill="{fill}" fill-opacity="{opacity}" '
+                   f'stroke="{stroke}"/>')
+
+    out.append(f'<text class="m" x="{x0}" y="{sq_y + sq_h + 18}" fill="{DIM}" font-size="10">30 days ago</text>')
+    out.append(f'<text class="m" x="{x1}" y="{sq_y + sq_h + 18}" fill="{DIM}" font-size="10" '
+               f'text-anchor="end">today</text>')
+    out.append("</svg>")
+    return "\n".join(out)
+
+
 def main():
     ASSETS.mkdir(exist_ok=True)
     (ASSETS / "pipeline.svg").write_text(render_pipeline(), encoding="utf-8")
@@ -337,11 +417,13 @@ def main():
     if "--sample" not in sys.argv:
         try:
             stats = fetch_stats()
-        except Exception as e:  # keep the last good card rather than breaking the README
+        except Exception as e:  # keep the last good cards rather than breaking the README
             print(f"stats fetch failed: {e}", file=sys.stderr)
-            if (ASSETS / "terminal.svg").exists():
+            if (ASSETS / "terminal.svg").exists() and (ASSETS / "streak.svg").exists():
                 return
-    (ASSETS / "terminal.svg").write_text(render_terminal(stats or SAMPLE), encoding="utf-8")
+    stats = stats or SAMPLE
+    (ASSETS / "terminal.svg").write_text(render_terminal(stats), encoding="utf-8")
+    (ASSETS / "streak.svg").write_text(render_streak(stats), encoding="utf-8")
     print("rendered:", ", ".join(p.name for p in sorted(ASSETS.glob("*.svg"))))
 
 
